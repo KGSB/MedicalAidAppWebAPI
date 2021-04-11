@@ -1,4 +1,5 @@
-﻿using MedicalAidAppWebApi.Data.Interfaces;
+﻿using MedicalAidAppWebApi.AnonymousModels;
+using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
-        public ICollection<Tuple<string, string>> GetConnectionRequests(string email)
+        public ICollection<ConnectionRequestAnonymous> GetConnectionRequests(string email)
         {
             //gets requests made to the given email
             var connectionRequests = from request in _context.ConnectionRequest
@@ -28,11 +29,11 @@ namespace MedicalAidAppWebApi.Data
                                      (caretaker.Email == email && request.RequesterId != caretaker.Id)
                                      select new { patientName = patient.Name, caretakerName = caretaker.Name };
             
-            List<Tuple<string, string>> connectionRequestList = new List<Tuple<string, string>>();
+            List<ConnectionRequestAnonymous> connectionRequestList = new List<ConnectionRequestAnonymous>();
 
             foreach (var connection in connectionRequests)
             {
-                connectionRequestList.Add(new Tuple<string, string>(connection.patientName, connection.caretakerName));
+                connectionRequestList.Add(new ConnectionRequestAnonymous() { CaretakerName = connection.caretakerName, PatientName = connection.patientName });
             }
 
             return connectionRequestList;

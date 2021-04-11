@@ -1,4 +1,6 @@
-﻿using MedicalAidAppWebApi.Models;
+﻿using MedicalAidAppWebApi.AnonymousModels;
+using MedicalAidAppWebApi.Dtos;
+using MedicalAidAppWebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +10,6 @@ namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IConnectionRepo
     {
-        ICollection<Tuple<string, string>> GetConnections(string email);
+        ICollection<ConnectionAnonymous> GetConnections(string email);
     }
 }

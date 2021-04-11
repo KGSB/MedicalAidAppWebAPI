@@ -23,7 +23,7 @@ namespace MedicalAidAppWebApi.Controllers
         }
 
         [HttpGet("{email}")]
-        public ActionResult<ICollection<Tuple<string, string>>> GetConnections(string email)
+        public ActionResult<ICollection<ConnectionReadDto>> GetConnections(string email)
         {
             var connections = _repository.GetConnections(email);
 

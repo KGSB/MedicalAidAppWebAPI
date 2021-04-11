@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MedicalAidAppWebApi.Data.Interfaces;
+using MedicalAidAppWebApi.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace MedicalAidAppWebApi.Controllers
         }
 
         [HttpGet("{email}")]
-        public ActionResult<ICollection<Tuple<string, string>>> GetConnectionRequests(string email)
+        public ActionResult<ICollection<ConnectionRequestReadDto>> GetConnectionRequests(string email)
         {
             return Ok(_repository.GetConnectionRequests(email));
         }

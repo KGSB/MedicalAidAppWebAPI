@@ -1,4 +1,6 @@
-﻿using MedicalAidAppWebApi.Data.Interfaces;
+﻿using MedicalAidAppWebApi.AnonymousModels;
+using MedicalAidAppWebApi.Data.Interfaces;
+using MedicalAidAppWebApi.Dtos;
 using MedicalAidAppWebApi.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +18,7 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
-        public ICollection<Tuple<string, string>> GetConnections(string email)
+        public ICollection<ConnectionAnonymous> GetConnections(string email)
         {
             var connections = from connection in _context.Connection
                               join patient in _context.Patient
@@ -29,11 +31,11 @@ namespace MedicalAidAppWebApi.Data
 
             //conversion from anonymous type. try to find a way to select into a non-anonymous type
             //try to find a way to connect this to a DTO. Is a DTO here even necessary?
-            List<Tuple<string, string>> connectionList = new List<Tuple<string, string>>();
+            List<ConnectionAnonymous> connectionList = new List<ConnectionAnonymous>();
 
             foreach (var connection in connections)
             {
-                connectionList.Add(new Tuple<string, string>(connection.patientName, connection.caretakerName));
+                connectionList.Add(new ConnectionAnonymous() { CaretakerName = connection.caretakerName, PatientName = connection.patientName });
             }
 
             return connectionList;
