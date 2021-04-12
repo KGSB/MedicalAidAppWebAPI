@@ -10,6 +10,8 @@ namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IConnectionRepo
     {
+        bool SaveChanges();
+        void CreateConnection(ConnectionAnonymous connection);
         ICollection<ConnectionAnonymous> GetConnections(string email);
     }
 }

@@ -16,6 +16,13 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
+        public void CreatePatient(Patient patient)
+        {
+            _context.Patient.Add(patient);
+        }
+
         public Patient GetPatientInfo(string email) => _context.Patient.FirstOrDefault(p => p.Email == email);
+
+        public bool SaveChanges() => _context.SaveChanges() >= 0;
     }
 }

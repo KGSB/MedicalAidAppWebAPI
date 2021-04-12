@@ -13,6 +13,7 @@ namespace MedicalAidAppWebApi.Profiles.AnonymousProfile
         public ConnectionsAnonymousProfile()
         {
             CreateMap<ConnectionAnonymous, ConnectionReadDto>();
+            CreateMap<ConnectionCreateDto, ConnectionAnonymous>();
         }
     }
 }

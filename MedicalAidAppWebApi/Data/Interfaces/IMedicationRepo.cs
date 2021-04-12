@@ -1,4 +1,5 @@
-﻿using MedicalAidAppWebApi.Models;
+﻿using MedicalAidAppWebApi.AnonymousModels;
+using MedicalAidAppWebApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IMedicationRepo
     {
+        bool SaveChanges();
+        void CreateMedication(MedicationAnonymous medication);
         ICollection<Medication> GetMedications(string email);
     }
 }

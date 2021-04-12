@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Profiles.AnonymousProfile
 {
-    public class ConnectionRequestsAnonymousProfile : Profile
+    public class MedicationsAnonymousProfile : Profile
     {
-        public ConnectionRequestsAnonymousProfile()
+        public MedicationsAnonymousProfile()
         {
-            CreateMap<ConnectionRequestAnonymous, ConnectionRequestReadDto>();
-            CreateMap<ConnectionRequestCreateDto, ConnectionRequestAnonymous>();
+            CreateMap<MedicationCreateDto, MedicationAnonymous>();
+            CreateMap<MedicationAnonymous, MedicationReadDto>();
         }
     }
 }

@@ -13,6 +13,7 @@ namespace MedicalAidAppWebApi.Profiles
         public PatientsProfile()
         {
             CreateMap<Patient, PatientReadDto>();
+            CreateMap<PatientCreateDto, Patient>();
         }
     }
 }

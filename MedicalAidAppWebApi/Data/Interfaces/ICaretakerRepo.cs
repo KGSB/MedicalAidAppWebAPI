@@ -8,6 +8,8 @@ namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface ICaretakerRepo
     {
+        bool SaveChanges();
+        void CreateCaretaker(Caretaker caretaker);
         Caretaker GetCaretakerInfo(string email);
     }
 }

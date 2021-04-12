@@ -26,14 +26,13 @@ namespace MedicalAidAppWebApi.Models
         public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<Medication> Medication { get; set; }
         public virtual DbSet<Patient> Patient { get; set; }
-        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseMySql("user id=MedicalDBAdmin;password=rabinovich490;host=192.168.1.48;database=MedicalDB;character set=utf8; ConvertZeroDatetime=True", x => x.ServerVersion("10.0.38-mariadb"));
+                optionsBuilder.UseMySql("user id=MedicalDBAdmin;password=rabinovich490;host=192.168.1.48;database=MedicalDB;character set=utf8", x => x.ServerVersion("10.0.38-mariadb"));
             }
         }
 
@@ -41,9 +40,6 @@ namespace MedicalAidAppWebApi.Models
         {
             modelBuilder.Entity<Appointment>(entity =>
             {
-                entity.HasIndex(e => e.LogId)
-                    .HasName("FK_Appointment_Log_ID");
-
                 entity.HasIndex(e => e.PatientId)
                     .HasName("FK_Appointment_Patient_ID");
 
@@ -56,23 +52,15 @@ namespace MedicalAidAppWebApi.Models
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.Property(e => e.LogId)
-                    .HasColumnName("LogID")
-                    .HasColumnType("int(11) unsigned");
-
                 entity.Property(e => e.PatientId)
                     .HasColumnName("PatientID")
                     .HasColumnType("int(11) unsigned");
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
                     .HasColumnType("varchar(50)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
-
-                entity.HasOne(d => d.Log)
-                    .WithMany(p => p.Appointment)
-                    .HasForeignKey(d => d.LogId)
-                    .HasConstraintName("FK_Appointment_Log_ID");
 
                 entity.HasOne(d => d.Patient)
                     .WithMany(p => p.Appointment)
@@ -197,6 +185,7 @@ namespace MedicalAidAppWebApi.Models
                     .HasColumnType("int(11) unsigned");
 
                 entity.Property(e => e.Title)
+                    .IsRequired()
                     .HasColumnType("varchar(50)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
@@ -270,36 +259,6 @@ namespace MedicalAidAppWebApi.Models
 
                 entity.Property(e => e.PhoneNumber)
                     .IsRequired()
-                    .HasColumnType("varchar(11)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
-                    .HasColumnType("int(11) unsigned");
-
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasColumnType("varchar(320)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.PhoneNumber)
                     .HasColumnType("varchar(11)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");

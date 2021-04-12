@@ -8,7 +8,7 @@ namespace MedicalAidAppWebApi.Dtos
 {
     public class ConnectionReadDto
     {
-        public virtual string Caretaker { get; set; }
-        public virtual string Patient { get; set; }
+        public virtual string CaretakerEmail { get; set; }
+        public virtual string PatientEmail { get; set; }
     }
 }

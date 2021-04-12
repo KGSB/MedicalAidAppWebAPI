@@ -9,6 +9,8 @@ namespace MedicalAidAppWebApi.AnonymousModels
     public class ConnectionAnonymous
     {
         public string CaretakerName { get; set; }
+        public string CaretakerEmail { get; set; }
         public string PatientName { get; set; }
+        public string PatientEmail { get; set; }
     }
 }

@@ -13,10 +13,8 @@ namespace MedicalAidAppWebApi.Models
         public string Title { get; set; }
         public DateTime DateTime { get; set; }
         public string Description { get; set; }
-        public uint? LogId { get; set; }
         public uint PatientId { get; set; }
 
-        public virtual Log Log { get; set; }
         public virtual Patient Patient { get; set; }
     }
 }

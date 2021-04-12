@@ -8,6 +8,8 @@ namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IPatientRepo
     {
+        bool SaveChanges();
+        void CreatePatient(Patient patient);
         Patient GetPatientInfo(string email);
     }
 }

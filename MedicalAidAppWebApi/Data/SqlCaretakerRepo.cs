@@ -16,6 +16,13 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
+        public void CreateCaretaker(Caretaker caretaker)
+        {
+            _context.Caretaker.Add(caretaker);
+        }
+
         public Caretaker GetCaretakerInfo(string email) => _context.Caretaker.FirstOrDefault(c => c.Email == email);
+
+        public bool SaveChanges() => _context.SaveChanges() >= 0;
     }
 }

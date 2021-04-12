@@ -9,11 +9,6 @@ namespace MedicalAidAppWebApi.Models
 {
     public partial class Log
     {
-        public Log()
-        {
-            Appointment = new HashSet<Appointment>();
-        }
-
         public uint Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -21,6 +16,5 @@ namespace MedicalAidAppWebApi.Models
         public uint PatientId { get; set; }
 
         public virtual Patient Patient { get; set; }
-        public virtual ICollection<Appointment> Appointment { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
+using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,15 +24,25 @@ namespace MedicalAidAppWebApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{email}")]
+        [HttpGet("{email}", Name = nameof(GetAppointments))]
         public ActionResult<ICollection<AppointmentReadDto>> GetAppointments(string email)
         {
-            var appointments = _repository.GetAppointments(email);
+            ICollection<Appointment> appointments = _repository.GetAppointments(email);
 
             if (appointments == default)
                 return NotFound();
 
             return Ok(_mapper.Map<ICollection<AppointmentReadDto>>(appointments));
+        }
+
+        [HttpPost]
+        public ActionResult<AppointmentReadDto> CreateAppointment(AppointmentCreateDto appointmentCreateDto)
+        {
+            AppointmentAnonymous model = _mapper.Map<AppointmentAnonymous>(appointmentCreateDto);
+            _repository.CreateAppointment(model);
+            _repository.SaveChanges();
+
+            return CreatedAtRoute(nameof(GetAppointments), new { email = model.PatientEmail }, _mapper.Map<AppointmentReadDto>(model));
         }
     }
 }

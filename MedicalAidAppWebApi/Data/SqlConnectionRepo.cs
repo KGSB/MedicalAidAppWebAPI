@@ -18,6 +18,20 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
+        public void CreateConnection(ConnectionAnonymous connection)
+        {
+            uint caretakerId = _context.Caretaker.FirstOrDefault(c => c.Email == connection.CaretakerEmail).Id;
+            uint patientId = _context.Patient.FirstOrDefault(p => p.Email == connection.PatientEmail).Id;
+
+            var connectionReqeust = _context.ConnectionRequest.Remove(_context.ConnectionRequest.FirstOrDefault(cr => cr.CaretakerId == caretakerId && cr.PatientId == patientId));
+
+            _context.Connection.Add(new Connection()
+            {
+                CaretakerId = caretakerId,
+                PatientId = patientId
+            });
+        }
+
         public ICollection<ConnectionAnonymous> GetConnections(string email)
         {
             var connections = from connection in _context.Connection
@@ -26,8 +40,11 @@ namespace MedicalAidAppWebApi.Data
                               join caretaker in _context.Caretaker
                               on connection.CaretakerId equals caretaker.Id
                               where patient.Email == email || caretaker.Email == email
-                              select new { patientName = patient.Name,
-                              caretakerName = caretaker.Name };
+                              select new
+                              {
+                                  patientName = patient.Name,
+                                  caretakerName = caretaker.Name
+                              };
 
             //conversion from anonymous type. try to find a way to select into a non-anonymous type
             //try to find a way to connect this to a DTO. Is a DTO here even necessary?
@@ -40,5 +57,7 @@ namespace MedicalAidAppWebApi.Data
 
             return connectionList;
         }
+
+        public bool SaveChanges() => _context.SaveChanges() >= 0;
     }
 }
