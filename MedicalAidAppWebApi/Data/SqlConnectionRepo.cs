@@ -1,11 +1,7 @@
-﻿using MedicalAidAppWebApi.AnonymousModels;
-using MedicalAidAppWebApi.Data.Interfaces;
-using MedicalAidAppWebApi.Dtos;
+﻿using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data
 {
@@ -18,44 +14,38 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
-        public void CreateConnection(ConnectionAnonymous connection)
+        public void CreateConnection(Connection connection)
         {
-            uint caretakerId = _context.Caretaker.FirstOrDefault(c => c.Email == connection.CaretakerEmail).Id;
-            uint patientId = _context.Patient.FirstOrDefault(p => p.Email == connection.PatientEmail).Id;
+            //neither user accessible
+            ConnectionRequest request = _context.ConnectionRequest.FirstOrDefault((cr) => cr.Caretaker.Email == connection.Caretaker.Email &&
+                cr.Patient.Email == connection.Patient.Email);
 
-            var connectionReqeust = _context.ConnectionRequest.Remove(_context.ConnectionRequest.FirstOrDefault(cr => cr.CaretakerId == caretakerId && cr.PatientId == patientId));
-
-            _context.Connection.Add(new Connection()
+            //requests and both users accessible through a user
+            User caretakerRequest = _context.User.FirstOrDefault(u => u.Email == connection.Caretaker.Email);
+            User patientRequest = _context.User.FirstOrDefault(u => u.Email == connection.Patient.Email);
+            
+            if (request != null)
             {
-                CaretakerId = caretakerId,
-                PatientId = patientId
-            });
+                _context.ConnectionRequest.Remove(request);
+
+                connection.CaretakerId = request.CaretakerId;
+                connection.PatientId = request.PatientId;
+                connection.Caretaker = caretakerRequest;
+                connection.Patient = patientRequest;
+
+                _context.Connection.Add(connection);
+            }
         }
 
-        public ICollection<ConnectionAnonymous> GetConnections(string email)
+        public ICollection<Connection> GetConnections(string email)
         {
-            var connections = from connection in _context.Connection
-                              join patient in _context.Patient
-                              on connection.PatientId equals patient.Id
-                              join caretaker in _context.Caretaker
-                              on connection.CaretakerId equals caretaker.Id
-                              where patient.Email == email || caretaker.Email == email
-                              select new
-                              {
-                                  patientName = patient.Name,
-                                  caretakerName = caretaker.Name
-                              };
+            User user = _context.User.FirstOrDefault(u => u.Email == email);
 
-            //conversion from anonymous type. try to find a way to select into a non-anonymous type
-            //try to find a way to connect this to a DTO. Is a DTO here even necessary?
-            List<ConnectionAnonymous> connectionList = new List<ConnectionAnonymous>();
-
-            foreach (var connection in connections)
-            {
-                connectionList.Add(new ConnectionAnonymous() { CaretakerName = connection.caretakerName, PatientName = connection.patientName });
-            }
-
-            return connectionList;
+            //ConnectionCaretaker is null if the user is a caretaker, ConnectionPatient is null if the user is patient
+            if (user.ConnectionCaretaker != null)
+                return user.ConnectionCaretaker;
+            else
+                return user.ConnectionPatient;
         }
 
         public bool SaveChanges() => _context.SaveChanges() >= 0;

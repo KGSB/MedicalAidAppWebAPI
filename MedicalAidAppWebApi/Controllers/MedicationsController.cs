@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
 using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Controllers
 {
@@ -38,7 +34,7 @@ namespace MedicalAidAppWebApi.Controllers
         [HttpPost]
         public ActionResult<MedicationReadDto> CreateMedication(MedicationCreateDto medicationCreateDto)
         {
-            var model = _mapper.Map<MedicationAnonymous>(medicationCreateDto);
+            var model = _mapper.Map<Medication>(medicationCreateDto);
             _repository.CreateMedication(model);
             _repository.SaveChanges();
 

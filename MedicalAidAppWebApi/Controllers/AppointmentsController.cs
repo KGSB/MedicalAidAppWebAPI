@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
 using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Controllers
 {
@@ -38,11 +34,11 @@ namespace MedicalAidAppWebApi.Controllers
         [HttpPost]
         public ActionResult<AppointmentReadDto> CreateAppointment(AppointmentCreateDto appointmentCreateDto)
         {
-            AppointmentAnonymous model = _mapper.Map<AppointmentAnonymous>(appointmentCreateDto);
+            Appointment model = _mapper.Map<Appointment>(appointmentCreateDto);
             _repository.CreateAppointment(model);
             _repository.SaveChanges();
 
-            return CreatedAtRoute(nameof(GetAppointments), new { email = model.PatientEmail }, _mapper.Map<AppointmentReadDto>(model));
+            return CreatedAtRoute(nameof(GetAppointments), new { email = model.User.Email }, _mapper.Map<AppointmentReadDto>(model));
         }
     }
 }

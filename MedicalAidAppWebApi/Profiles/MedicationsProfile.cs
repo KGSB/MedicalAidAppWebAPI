@@ -13,7 +13,8 @@ namespace MedicalAidAppWebApi.Profiles
         public MedicationsProfile()
         {
             CreateMap<Medication, MedicationReadDto>();
-            CreateMap<MedicationCreateDto, Medication>();
+            CreateMap<MedicationCreateDto, Medication>()
+                .ForPath(dest => dest.User.Email, opt => opt.MapFrom(src => src.PatientEmail));
         }
     }
 }

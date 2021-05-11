@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Profiles
 {
-    public class CaretakersProfile : Profile
+    public class UsersProfile : Profile
     {
-        public CaretakersProfile()
+        public UsersProfile()
         {
-            CreateMap<Caretaker, CaretakerReadDto>();
-            CreateMap<CaretakerCreateDto, Caretaker>();
+            CreateMap<User, UserReadDto>();
+            CreateMap<UserCreateDto, User>();
         }
     }
 }

@@ -20,12 +20,11 @@ namespace MedicalAidAppWebApi.Models
         }
 
         public virtual DbSet<Appointment> Appointment { get; set; }
-        public virtual DbSet<Caretaker> Caretaker { get; set; }
         public virtual DbSet<Connection> Connection { get; set; }
         public virtual DbSet<ConnectionRequest> ConnectionRequest { get; set; }
         public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<Medication> Medication { get; set; }
-        public virtual DbSet<Patient> Patient { get; set; }
+        public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,21 +39,18 @@ namespace MedicalAidAppWebApi.Models
         {
             modelBuilder.Entity<Appointment>(entity =>
             {
-                entity.HasIndex(e => e.PatientId)
-                    .HasName("FK_Appointment_Patient_ID");
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_Appointment_UserID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
                     .HasColumnType("int(11) unsigned");
 
                 entity.Property(e => e.Description)
+                    .IsRequired()
                     .HasColumnType("varchar(400)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.PatientId)
-                    .HasColumnName("PatientID")
-                    .HasColumnType("int(11) unsigned");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -62,45 +58,24 @@ namespace MedicalAidAppWebApi.Models
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Appointment)
-                    .HasForeignKey(d => d.PatientId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Appointment_Patient_ID");
-            });
-
-            modelBuilder.Entity<Caretaker>(entity =>
-            {
-                entity.Property(e => e.Id)
-                    .HasColumnName("ID")
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
                     .HasColumnType("int(11) unsigned");
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasColumnType("varchar(320)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnType("varchar(255)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
-
-                entity.Property(e => e.PhoneNumber)
-                    .IsRequired()
-                    .HasColumnType("varchar(11)")
-                    .HasCharSet("latin1")
-                    .HasCollation("latin1_swedish_ci");
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Appointment)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Appointment_UserID");
             });
 
             modelBuilder.Entity<Connection>(entity =>
             {
                 entity.HasIndex(e => e.CaretakerId)
-                    .HasName("FK_PatientCaretaker_Caretaker_ID");
+                    .HasName("FK_Connection_CaretakerID");
 
                 entity.HasIndex(e => e.PatientId)
-                    .HasName("FK_PatientCaretaker_Patient_ID");
+                    .HasName("FK_Connection_PatientID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -115,25 +90,28 @@ namespace MedicalAidAppWebApi.Models
                     .HasColumnType("int(11) unsigned");
 
                 entity.HasOne(d => d.Caretaker)
-                    .WithMany(p => p.Connection)
+                    .WithMany(p => p.ConnectionCaretaker)
                     .HasForeignKey(d => d.CaretakerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PatientCaretaker_Caretaker_ID");
+                    .HasConstraintName("FK_Connection_CaretakerID");
 
                 entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.Connection)
+                    .WithMany(p => p.ConnectionPatient)
                     .HasForeignKey(d => d.PatientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PatientCaretaker_Patient_ID");
+                    .HasConstraintName("FK_Connection_PatientID");
             });
 
             modelBuilder.Entity<ConnectionRequest>(entity =>
             {
                 entity.HasIndex(e => e.CaretakerId)
-                    .HasName("FK_ConnectionRequest_Caretaker_ID");
+                    .HasName("FK_ConnectionRequest_CaretakerID");
 
                 entity.HasIndex(e => e.PatientId)
-                    .HasName("FK_ConnectionRequest_Patient_ID");
+                    .HasName("FK_ConnectionRequest_PatientID");
+
+                entity.HasIndex(e => e.RequesterId)
+                    .HasName("FK_ConnectionRequest_User_ID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -152,22 +130,28 @@ namespace MedicalAidAppWebApi.Models
                     .HasColumnType("int(11) unsigned");
 
                 entity.HasOne(d => d.Caretaker)
-                    .WithMany(p => p.ConnectionRequest)
+                    .WithMany(p => p.ConnectionRequestCaretaker)
                     .HasForeignKey(d => d.CaretakerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConnectionRequest_Caretaker_ID");
+                    .HasConstraintName("FK_ConnectionRequest_CaretakerID");
 
                 entity.HasOne(d => d.Patient)
-                    .WithMany(p => p.ConnectionRequest)
+                    .WithMany(p => p.ConnectionRequestPatient)
                     .HasForeignKey(d => d.PatientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ConnectionRequest_Patient_ID");
+                    .HasConstraintName("FK_ConnectionRequest_PatientID");
+
+                entity.HasOne(d => d.Requester)
+                    .WithMany(p => p.ConnectionRequestRequester)
+                    .HasForeignKey(d => d.RequesterId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ConnectionRequest_User_ID");
             });
 
             modelBuilder.Entity<Log>(entity =>
             {
-                entity.HasIndex(e => e.PatientId)
-                    .HasName("FK_Log_Patient_ID");
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_Log_PatientID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -178,11 +162,7 @@ namespace MedicalAidAppWebApi.Models
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.Property(e => e.PainScale).HasColumnType("tinyint(4) unsigned");
-
-                entity.Property(e => e.PatientId)
-                    .HasColumnName("PatientID")
-                    .HasColumnType("int(11) unsigned");
+                entity.Property(e => e.Painscale).HasColumnType("tinyint(4) unsigned");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -190,17 +170,21 @@ namespace MedicalAidAppWebApi.Models
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.HasOne(d => d.Patient)
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11) unsigned");
+
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Log)
-                    .HasForeignKey(d => d.PatientId)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Log_Patient_ID");
+                    .HasConstraintName("FK_Log_PatientID");
             });
 
             modelBuilder.Entity<Medication>(entity =>
             {
-                entity.HasIndex(e => e.PatientId)
-                    .HasName("FK_Medication_Patient_ID");
+                entity.HasIndex(e => e.UserId)
+                    .HasName("FK_Medication_UserID");
 
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")
@@ -223,23 +207,23 @@ namespace MedicalAidAppWebApi.Models
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.Property(e => e.PatientId)
-                    .HasColumnName("PatientID")
-                    .HasColumnType("int(11) unsigned");
-
                 entity.Property(e => e.Time)
                     .HasColumnType("varchar(255)")
                     .HasCharSet("latin1")
                     .HasCollation("latin1_swedish_ci");
 
-                entity.HasOne(d => d.Patient)
+                entity.Property(e => e.UserId)
+                    .HasColumnName("UserID")
+                    .HasColumnType("int(11) unsigned");
+
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Medication)
-                    .HasForeignKey(d => d.PatientId)
+                    .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Medication_Patient_ID");
+                    .HasConstraintName("FK_Medication_UserID");
             });
 
-            modelBuilder.Entity<Patient>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.Id)
                     .HasColumnName("ID")

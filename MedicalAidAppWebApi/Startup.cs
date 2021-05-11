@@ -35,8 +35,7 @@ namespace MedicalAidAppWebApi
 
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-            services.AddScoped<IPatientRepo, SqlPatientRepo>();
-            services.AddScoped<ICaretakerRepo, SqlCaretakerRepo>();
+            services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<ILogRepo, SqlLogRepo>();
             services.AddScoped<IAppointmentRepo, SqlAppointmentRepo>();
             services.AddScoped<IMedicationRepo, SqlMedicationRepo>();

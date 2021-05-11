@@ -13,6 +13,8 @@ namespace MedicalAidAppWebApi.Profiles
         public AppointmentsProfile()
         {
             CreateMap<Appointment, AppointmentReadDto>();
+            CreateMap<AppointmentCreateDto, Appointment>()
+                .ForPath(dest => dest.User.Email, opt => opt.MapFrom(src => src.PatientEmail));
         }
     }
 }

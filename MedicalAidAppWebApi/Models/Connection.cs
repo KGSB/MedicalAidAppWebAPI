@@ -10,10 +10,10 @@ namespace MedicalAidAppWebApi.Models
     public partial class Connection
     {
         public uint Id { get; set; }
-        public uint PatientId { get; set; }
         public uint CaretakerId { get; set; }
+        public uint PatientId { get; set; }
 
-        public virtual Caretaker Caretaker { get; set; }
-        public virtual Patient Patient { get; set; }
+        public virtual User Caretaker { get; set; }
+        public virtual User Patient { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace MedicalAidAppWebApi.Models
         public string Description { get; set; }
         public string Dosage { get; set; }
         public string Time { get; set; }
-        public uint PatientId { get; set; }
+        public uint UserId { get; set; }
 
-        public virtual Patient Patient { get; set; }
+        public virtual User User { get; set; }
     }
 }

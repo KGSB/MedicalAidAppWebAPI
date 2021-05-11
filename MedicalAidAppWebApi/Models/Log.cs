@@ -12,9 +12,9 @@ namespace MedicalAidAppWebApi.Models
         public uint Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public byte? PainScale { get; set; }
-        public uint PatientId { get; set; }
+        public byte? Painscale { get; set; }
+        public uint UserId { get; set; }
 
-        public virtual Patient Patient { get; set; }
+        public virtual User User { get; set; }
     }
 }

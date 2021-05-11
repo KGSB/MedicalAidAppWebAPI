@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data.Interfaces
 {
-    public interface IPatientRepo
+    public interface IUserRepo
     {
         bool SaveChanges();
-        void CreatePatient(Patient patient);
-        Patient GetPatientInfo(string email);
+        void CreateUser(User user);
+        User GetUserInfo(string email);
     }
 }

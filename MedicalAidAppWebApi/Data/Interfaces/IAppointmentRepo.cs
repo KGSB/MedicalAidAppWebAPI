@@ -1,16 +1,12 @@
-﻿using MedicalAidAppWebApi.AnonymousModels;
-using MedicalAidAppWebApi.Models;
-using System;
+﻿using MedicalAidAppWebApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IAppointmentRepo
     {
         bool SaveChanges();
-        void CreateAppointment(AppointmentAnonymous appointment);
+        void CreateAppointment(Appointment appointment);
         ICollection<Appointment> GetAppointments(string email);
     }
 }

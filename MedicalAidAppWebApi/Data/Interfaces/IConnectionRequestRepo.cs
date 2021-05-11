@@ -1,15 +1,12 @@
-﻿using MedicalAidAppWebApi.AnonymousModels;
-using System;
+﻿using MedicalAidAppWebApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface IConnectionRequestRepo
     {
         bool SaveChanges();
-        void CreateConnectionRequest(ConnectionRequestAnonymous connectionRequest);
-        ICollection<ConnectionRequestAnonymous> GetConnectionRequests(string email);
+        ConnectionRequest CreateConnectionRequest(ConnectionRequest connectionRequest);
+        ICollection<ConnectionRequest> GetConnectionRequests(string email);
     }
 }

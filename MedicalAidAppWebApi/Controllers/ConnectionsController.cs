@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
+using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Controllers
 {
@@ -26,19 +23,18 @@ namespace MedicalAidAppWebApi.Controllers
         [HttpGet("{email}", Name = nameof(GetConnections))]
         public ActionResult<ICollection<ConnectionReadDto>> GetConnections(string email)
         {
-            var connections = _repository.GetConnections(email);
+            ICollection<Connection> connections = _repository.GetConnections(email);
 
             if(connections == default)
                 return NotFound();
 
-
-            return Ok(_mapper.Map<ConnectionReadDto>(connections));
+            return Ok(_mapper.Map<ICollection<ConnectionReadDto>>(connections));
         }
 
         [HttpPost]
         public ActionResult<ConnectionReadDto> CreateConnection(ConnectionCreateDto connectionCreateDto)
         {
-            var model = _mapper.Map<ConnectionAnonymous>(connectionCreateDto);
+            Connection model = _mapper.Map<Connection>(connectionCreateDto);
             _repository.CreateConnection(model);
             _repository.SaveChanges();
 

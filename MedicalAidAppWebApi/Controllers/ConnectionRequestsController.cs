@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
-using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
+using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Controllers
 {
@@ -29,27 +26,25 @@ namespace MedicalAidAppWebApi.Controllers
             return Ok(_mapper.Map<ICollection<ConnectionRequestReadDto>>(_repository.GetConnectionRequests(email)));
         }
 
-        //TODO: check for a pre-existing connection before creating a connection request.
         [HttpPost]
         public ActionResult<ConnectionRequestReadDto> CreateConnectionRequest(ConnectionRequestCreateDto connectionRequestCreateDto)
         {
-            var model = _mapper.Map<ConnectionRequestAnonymous>(connectionRequestCreateDto);
-            _repository.CreateConnectionRequest(model);
+            ConnectionRequest model = _mapper.Map<ConnectionRequest>(connectionRequestCreateDto);
+            ConnectionRequest returnModel = _repository.CreateConnectionRequest(model);
             _repository.SaveChanges();
 
             string routeValue;
 
-            if (model.RequesterEmail == model.CaretakerEmail)
+            if (returnModel.RequesterId == returnModel.CaretakerId)
             {
-                routeValue = model.PatientEmail;
+                routeValue = returnModel.Patient.Email;
             }
             else
             {
-                routeValue = model.CaretakerEmail;
+                routeValue = returnModel.Caretaker.Email;
             }
 
-            //the DTO returned doesn't supply the names since the CreateDto only contains emails. fix this if you have time.
-            return CreatedAtRoute(nameof(GetConnectionRequests), new { email = routeValue }, _mapper.Map<ConnectionRequestReadDto>(model));
+            return CreatedAtRoute(nameof(GetConnectionRequests), new { email = routeValue }, _mapper.Map<ConnectionRequestReadDto>(returnModel));
         }
     }
 }

@@ -13,7 +13,8 @@ namespace MedicalAidAppWebApi.Profiles
         public LogsProfile()
         {
             CreateMap<Log, LogReadDto>();
-            CreateMap<LogCreateDto, Log>();
+            CreateMap<LogCreateDto, Log>()
+                .ForPath(dest => dest.User.Email, opt => opt.MapFrom(src => src.PatientEmail));
         }
     }
 }

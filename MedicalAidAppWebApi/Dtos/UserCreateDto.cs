@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Dtos
 {
-    public class CaretakerReadDto
+    public class UserCreateDto
     {
         public string Email { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
+        public ulong IsPatient { get; set; }
     }
 }

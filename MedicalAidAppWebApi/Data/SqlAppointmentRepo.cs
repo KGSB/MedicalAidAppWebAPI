@@ -1,10 +1,7 @@
-﻿using MedicalAidAppWebApi.AnonymousModels;
-using MedicalAidAppWebApi.Data.Interfaces;
+﻿using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data
 {
@@ -17,20 +14,15 @@ namespace MedicalAidAppWebApi.Data
             _context = context;
         }
 
-        public void CreateAppointment(AppointmentAnonymous appointment)
+        public void CreateAppointment(Appointment appointment)
         {
-            uint patientID = _context.Patient.FirstOrDefault(p => p.Email == appointment.PatientEmail).Id;
-
-            _context.Appointment.Add(new Appointment()
-            {
-                DateTime = appointment.DateTime,
-                Description = appointment.Description,
-                Title = appointment.Title,
-                PatientId = patientID,
-            });
+            appointment.User = _context.User.FirstOrDefault(u => u.Email == appointment.User.Email);
+            appointment.UserId = appointment.User.Id;
+            _context.Appointment.Add(appointment);
         }
 
-        public ICollection<Appointment> GetAppointments(string email) => _context.Appointment.Where(a => a.PatientId == _context.Patient.FirstOrDefault(p => p.Email == email).Id).ToList();
+        public ICollection<Appointment> GetAppointments(string email)
+            => _context.Appointment.Where(a => a.User.Email == email).ToList();
 
         public bool SaveChanges() => _context.SaveChanges() >= 0;
     }

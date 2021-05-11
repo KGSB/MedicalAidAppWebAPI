@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data
 {
-    public class SqlPatientRepo : IPatientRepo
+    public class SqlUserRepo : IUserRepo
     {
         private readonly MedicalDBContext _context;
 
-        public SqlPatientRepo(MedicalDBContext context)
+        public SqlUserRepo(MedicalDBContext context)
         {
             _context = context;
         }
 
-        public void CreatePatient(Patient patient)
+        public void CreateUser(User user)
         {
-            _context.Patient.Add(patient);
+            _context.User.Add(user);
         }
 
-        public Patient GetPatientInfo(string email) => _context.Patient.FirstOrDefault(p => p.Email == email);
+        public User GetUserInfo(string email) => _context.User.FirstOrDefault(u => u.Email == email);       
 
         public bool SaveChanges() => _context.SaveChanges() >= 0;
     }

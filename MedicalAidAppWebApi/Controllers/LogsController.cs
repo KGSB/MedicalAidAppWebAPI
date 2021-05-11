@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using MedicalAidAppWebApi.AnonymousModels;
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
 using MedicalAidAppWebApi.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Controllers
 {
@@ -27,7 +23,7 @@ namespace MedicalAidAppWebApi.Controllers
         [HttpGet("{email}", Name = nameof(GetLogs))]
         public ActionResult<ICollection<LogReadDto>> GetLogs(string email)
         {
-            var logs = _repository.GetLogs(email);
+            ICollection<Log> logs = _repository.GetLogs(email);
 
             if (logs == default)
                 return NotFound();
@@ -38,7 +34,7 @@ namespace MedicalAidAppWebApi.Controllers
         [HttpPost]
         public ActionResult<LogReadDto> CreateLog(LogCreateDto logCreateDto)
         {
-            var model = _mapper.Map<LogAnonymous>(logCreateDto);
+            Log model = _mapper.Map<Log>(logCreateDto);
             _repository.CreateLog(model);
             _repository.SaveChanges();
 

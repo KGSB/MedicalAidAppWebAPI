@@ -1,16 +1,12 @@
-﻿using MedicalAidAppWebApi.AnonymousModels;
-using MedicalAidAppWebApi.Models;
-using System;
+﻿using MedicalAidAppWebApi.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Data.Interfaces
 {
     public interface ILogRepo
     {
         bool SaveChanges();
-        void CreateLog(LogAnonymous log);
+        void CreateLog(Log log);
         ICollection<Log> GetLogs(string email);
     }
 }
