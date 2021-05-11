@@ -7,6 +7,7 @@ namespace MedicalAidAppWebApi.Data.Interfaces
     {
         bool SaveChanges();
         void CreateAppointment(Appointment appointment);
+        void DeleteAppointment(uint id);
         ICollection<Appointment> GetAppointments(string email);
     }
 }

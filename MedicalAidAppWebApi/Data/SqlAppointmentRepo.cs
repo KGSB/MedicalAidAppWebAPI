@@ -21,8 +21,26 @@ namespace MedicalAidAppWebApi.Data
             _context.Appointment.Add(appointment);
         }
 
+        public void DeleteAppointment(uint id)
+        {
+            Appointment appointment = _context.Appointment.FirstOrDefault(a => a.Id == id);
+            _context.Appointment.Remove(appointment);
+        }
+
         public ICollection<Appointment> GetAppointments(string email)
-            => _context.Appointment.Where(a => a.User.Email == email).ToList();
+        {
+            var appointments = _context.Appointment.Where(a => a.User.Email == email);
+
+            //explicitly load the user information attatched to the appointments
+            //necessary for patching
+            foreach (var appointment in appointments)
+            {
+                //_context.Entry(appointment).Reference(a => a.User).Load();
+            }
+
+            //var appointmentList = appointments.ToList();
+            return appointments.ToList();
+        }
 
         public bool SaveChanges() => _context.SaveChanges() >= 0;
     }

@@ -10,6 +10,7 @@ namespace MedicalAidAppWebApi.Data.Interfaces
     {
         bool SaveChanges();
         void CreateUser(User user);
+        void DeleteUser(string email);
         User GetUserInfo(string email);
     }
 }
