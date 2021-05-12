@@ -42,18 +42,17 @@ namespace MedicalAidAppWebApi.Controllers
             return CreatedAtRoute(nameof(GetAppointments), new { email = model.User.Email }, _mapper.Map<AppointmentReadDto>(model));
         }
 
-        [HttpPatch("{email}/{id}")]
-        public ActionResult PatchAppointment(uint id, string email, JsonPatchDocument<AppointmentCreateUpdateDto> patchDocument)
+        [HttpPatch("{email}/{appointmentId}")]
+        public ActionResult PatchAppointment(uint appointmentId, string email, JsonPatchDocument<AppointmentCreateUpdateDto> patchDocument)
         {
             ICollection<Appointment> appointments = _repository.GetAppointments(email);
             Appointment existingAppointment = null;
 
             foreach (Appointment appointment in appointments)
             {
-                if (appointment.Id == id)
+                if (appointment.Id == appointmentId)
                 {
                     existingAppointment = appointment;
-                    existingAppointment.User = new User() { Email = email };
                     break;
                 }
             }
@@ -76,10 +75,10 @@ namespace MedicalAidAppWebApi.Controllers
             return NoContent();
         }
 
-        [HttpDelete("{id}")]
-        public ActionResult DeleteAppointment(uint id)
+        [HttpDelete("{appointmentId}")]
+        public ActionResult DeleteAppointment(uint appointmentId)
         {
-            _repository.DeleteAppointment(id);
+            _repository.DeleteAppointment(appointmentId);
             _repository.SaveChanges();
             return NoContent();
         }

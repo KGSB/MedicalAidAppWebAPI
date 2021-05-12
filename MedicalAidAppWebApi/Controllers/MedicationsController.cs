@@ -2,6 +2,7 @@
 using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Dtos;
 using MedicalAidAppWebApi.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -32,13 +33,54 @@ namespace MedicalAidAppWebApi.Controllers
         }
 
         [HttpPost]
-        public ActionResult<MedicationReadDto> CreateMedication(MedicationCreateDto medicationCreateDto)
+        public ActionResult<MedicationReadDto> CreateMedication(MedicationCreateUpdateDto medicationCreateDto)
         {
             var model = _mapper.Map<Medication>(medicationCreateDto);
             _repository.CreateMedication(model);
             _repository.SaveChanges();
 
             return CreatedAtRoute(nameof(GetMedications), new { email = medicationCreateDto.PatientEmail }, _mapper.Map<MedicationReadDto>(model));
+        }
+
+        [HttpPatch("{email}/{medicationId}")]
+        public ActionResult PatchMedication(uint medicationId, string email, JsonPatchDocument<MedicationCreateUpdateDto> patchDocument)
+        {
+            ICollection<Medication> medications = _repository.GetMedications(email);
+            Medication existingMedication = null;
+
+            foreach (Medication medication in medications)
+            {
+                if (medication.Id == medicationId)
+                {
+                    existingMedication = medication;
+                    break;
+                }
+            }
+
+            if (existingMedication == null)
+            {
+                return NotFound();
+            }
+
+            MedicationCreateUpdateDto medicationToPatch = _mapper.Map<MedicationCreateUpdateDto>(existingMedication);
+            patchDocument.ApplyTo(medicationToPatch, ModelState);
+
+            if (!TryValidateModel(medicationToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(medicationToPatch, existingMedication);
+            _repository.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpDelete("{medicationId}")]
+        public ActionResult DeleteMedication(uint medicationId)
+        {
+            _repository.DeleteMedication(medicationId);
+            _repository.SaveChanges();
+            return NoContent();
         }
     }
 }

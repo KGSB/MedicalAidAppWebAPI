@@ -7,6 +7,7 @@ namespace MedicalAidAppWebApi.Data.Interfaces
     {
         bool SaveChanges();
         void CreateLog(Log log);
+        void DeleteLog(uint id);
         ICollection<Log> GetLogs(string email);
     }
 }

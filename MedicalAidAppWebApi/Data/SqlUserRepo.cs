@@ -18,42 +18,42 @@ namespace MedicalAidAppWebApi.Data
 
         public void CreateUser(User user)
         {
-            _context.User.Add(user);
+            _context.Users.Add(user);
         }
 
         public void DeleteUser(string email)
         {
-            User user = _context.User.FirstOrDefault(u => u.Email == email);
+            User user = _context.Users.FirstOrDefault(u => u.Email == email);
 
-            foreach (Connection connection in _context.Connection.Where(c => c.Caretaker == user || c.Patient == user))
+            foreach (Connection connection in _context.Connections.Where(c => c.Caretaker == user || c.Patient == user))
             {
-                _context.Connection.Remove(connection);
+                _context.Connections.Remove(connection);
             }
 
-            foreach (ConnectionRequest connectionRequest in _context.ConnectionRequest.Where(cr => cr.Caretaker == user || cr.Patient == user))
+            foreach (ConnectionRequest connectionRequest in _context.ConnectionRequests.Where(cr => cr.Caretaker == user || cr.Patient == user))
             {
-                _context.ConnectionRequest.Remove(connectionRequest);
+                _context.ConnectionRequests.Remove(connectionRequest);
             }
 
-            foreach (Medication medication in _context.Medication.Where(m => m.User == user))
+            foreach (Medication medication in _context.Medications.Where(m => m.User == user))
             {
-                _context.Medication.Remove(medication);
+                _context.Medications.Remove(medication);
             }
 
-            foreach (Log log in _context.Log.Where(l => l.User == user))
+            foreach (Log log in _context.Logs.Where(l => l.User == user))
             {
-                _context.Log.Remove(log);
+                _context.Logs.Remove(log);
             }
 
-            foreach (Appointment appointment in _context.Appointment.Where(a => a.User == user))
+            foreach (Appointment appointment in _context.Appointments.Where(a => a.User == user))
             {
-                _context.Appointment.Remove(appointment);
+                _context.Appointments.Remove(appointment);
             }
 
-            _context.User.Remove(user);
+            _context.Users.Remove(user);
         }
 
-        public User GetUserInfo(string email) => _context.User.FirstOrDefault(u => u.Email == email);       
+        public User GetUserInfo(string email) => _context.Users.FirstOrDefault(u => u.Email == email);       
 
         public bool SaveChanges() => _context.SaveChanges() >= 0;
     }

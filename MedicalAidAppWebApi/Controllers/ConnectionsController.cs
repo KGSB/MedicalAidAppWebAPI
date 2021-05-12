@@ -40,5 +40,24 @@ namespace MedicalAidAppWebApi.Controllers
 
             return CreatedAtRoute(nameof(GetConnections), new { email = connectionCreateDto.AccepterEmail }, _mapper.Map<ConnectionReadDto>(model));
         }
+
+        [HttpDelete("{deleterEmail}/{connectionToBeDeletedEmail}")]
+        //deleterEmail is the person that is denying a request
+        public ActionResult DeleteConnection(string deleterEmail, string connectionToBeDeletedEmail)
+        {
+            ICollection<Connection> connections = _repository.GetConnections(connectionToBeDeletedEmail);
+
+            foreach (Connection connection in connections)
+            {
+                if (connection.Caretaker.Email == connectionToBeDeletedEmail || connection.Patient.Email == connectionToBeDeletedEmail)
+                {
+                    _repository.DeleteConnection(connection);
+                    break;
+                }
+            }
+
+            _repository.SaveChanges();
+            return NoContent();
+        }
     }
 }

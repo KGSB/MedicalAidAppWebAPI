@@ -1,5 +1,6 @@
 ﻿using MedicalAidAppWebApi.Data.Interfaces;
 using MedicalAidAppWebApi.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -16,14 +17,14 @@ namespace MedicalAidAppWebApi.Data
 
         public ConnectionRequest CreateConnectionRequest(ConnectionRequest connectionRequest)
         {
-            uint caretakerID = _context.User.FirstOrDefault(u => u.Email == connectionRequest.Caretaker.Email).Id;
-            uint patientID = _context.User.FirstOrDefault(u => u.Email == connectionRequest.Patient.Email).Id;
+            uint caretakerID = _context.Users.FirstOrDefault(u => u.Email == connectionRequest.Caretaker.Email).Id;
+            uint patientID = _context.Users.FirstOrDefault(u => u.Email == connectionRequest.Patient.Email).Id;
             uint requesterID = connectionRequest.Requester.Email == connectionRequest.Patient.Email ? patientID : caretakerID;
 
-            ConnectionRequest existingRequest = _context.ConnectionRequest
+            ConnectionRequest existingRequest = _context.ConnectionRequests
                 .FirstOrDefault(cr => cr.CaretakerId == caretakerID && cr.PatientId == patientID);
 
-            Connection existingConnection = _context.Connection
+            Connection existingConnection = _context.Connections
                 .FirstOrDefault(c => c.CaretakerId == caretakerID && c.PatientId == patientID);
 
             if (existingRequest == null && existingConnection == null)
@@ -35,37 +36,26 @@ namespace MedicalAidAppWebApi.Data
                     RequesterId = requesterID
                 };
 
-                _context.ConnectionRequest.Add(requestToAdd);
+                _context.ConnectionRequests.Add(requestToAdd);
                 return requestToAdd;            
             }
 
             return null;
         }
 
+        public void DeleteConnectionRequest(ConnectionRequest connectionRequest)
+        {
+            _context.ConnectionRequests.Remove(connectionRequest);
+        }
+
         public ICollection<ConnectionRequest> GetConnectionRequests(string email)
         {
-            User user = _context.User.FirstOrDefault(u => u.Email == email);
-            _context.ConnectionRequest.Where(cr => cr.Caretaker.Email == email || cr.Patient.Email == email);
-
             //only gets requests made to the given email, doesn't get requests made by the given email
-            List<ConnectionRequest> a = _context.ConnectionRequest.Where(cr => (cr.Caretaker.Email == email ||
-            cr.Patient.Email == email) && cr.Requester.Email != email).ToList();
-
-            for (int i = 0; i < a.Count; i++)
-            {
-                if (a[i].Caretaker == null)
-                {
-                    a[i].Caretaker = _context.User.FirstOrDefault(u => u.Id == a[i].CaretakerId);
-                }
-                else if (a[i].Patient == null)
-                {
-                    a[i].Patient = _context.User.FirstOrDefault(u => u.Id == a[i].PatientId);
-                }
-            }
-            //_context.ConnectionRequest.Where(cr => cr.RequesterId != user.Id &&
-            //(cr.CaretakerId == user.Id || cr.PatientId == user.Id)).ToList();
-
-            return a;
+            //loads caretaker and patient information for each request that matches our condition
+            return _context.ConnectionRequests
+                .Include(cr => cr.Caretaker)
+                .Include(cr => cr.Patient)
+                .Where(cr => (cr.Caretaker.Email == email || cr.Patient.Email == email) && cr.Requester.Email != email).ToList();
         }
 
         public bool SaveChanges()

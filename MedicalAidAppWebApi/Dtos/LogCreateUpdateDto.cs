@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MedicalAidAppWebApi.Dtos
 {
-    public class LogCreateDto
+    public class LogCreateUpdateDto
     {
         public string PatientEmail { get; set; }
         public string Title { get; set; }

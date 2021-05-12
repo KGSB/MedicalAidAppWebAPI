@@ -7,6 +7,7 @@ namespace MedicalAidAppWebApi.Data.Interfaces
     {
         bool SaveChanges();
         ConnectionRequest CreateConnectionRequest(ConnectionRequest connectionRequest);
+        void DeleteConnectionRequest(ConnectionRequest connectionRequest);
         ICollection<ConnectionRequest> GetConnectionRequests(string email);
     }
 }

@@ -7,6 +7,7 @@ namespace MedicalAidAppWebApi.Dtos
 {
     public class MedicationReadDto
     {
+        public uint ID { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string Dosage { get; set; }

@@ -7,6 +7,7 @@ namespace MedicalAidAppWebApi.Data.Interfaces
     {
         bool SaveChanges();
         void CreateMedication(Medication medication);
+        void DeleteMedication(uint mediactionId);
         ICollection<Medication> GetMedications(string email);
     }
 }

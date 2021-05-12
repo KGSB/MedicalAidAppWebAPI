@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-// Code scaffolded by EF Core assumes nullable reference types (NRTs) are not used or disabled.
-// If you have enabled NRTs for your project, then un-comment the following line:
-// #nullable disable
+#nullable disable
 
 namespace MedicalAidAppWebApi.Models
 {
@@ -11,14 +9,14 @@ namespace MedicalAidAppWebApi.Models
     {
         public User()
         {
-            Appointment = new HashSet<Appointment>();
-            ConnectionCaretaker = new HashSet<Connection>();
-            ConnectionPatient = new HashSet<Connection>();
-            ConnectionRequestCaretaker = new HashSet<ConnectionRequest>();
-            ConnectionRequestPatient = new HashSet<ConnectionRequest>();
-            ConnectionRequestRequester = new HashSet<ConnectionRequest>();
-            Log = new HashSet<Log>();
-            Medication = new HashSet<Medication>();
+            Appointments = new HashSet<Appointment>();
+            ConnectionCaretakers = new HashSet<Connection>();
+            ConnectionPatients = new HashSet<Connection>();
+            ConnectionRequestCaretakers = new HashSet<ConnectionRequest>();
+            ConnectionRequestPatients = new HashSet<ConnectionRequest>();
+            ConnectionRequestRequesters = new HashSet<ConnectionRequest>();
+            Logs = new HashSet<Log>();
+            Medications = new HashSet<Medication>();
         }
 
         public uint Id { get; set; }
@@ -27,13 +25,13 @@ namespace MedicalAidAppWebApi.Models
         public string PhoneNumber { get; set; }
         public bool IsPatient { get; set; }
 
-        public virtual ICollection<Appointment> Appointment { get; set; }
-        public virtual ICollection<Connection> ConnectionCaretaker { get; set; }
-        public virtual ICollection<Connection> ConnectionPatient { get; set; }
-        public virtual ICollection<ConnectionRequest> ConnectionRequestCaretaker { get; set; }
-        public virtual ICollection<ConnectionRequest> ConnectionRequestPatient { get; set; }
-        public virtual ICollection<ConnectionRequest> ConnectionRequestRequester { get; set; }
-        public virtual ICollection<Log> Log { get; set; }
-        public virtual ICollection<Medication> Medication { get; set; }
+        public virtual ICollection<Appointment> Appointments { get; set; }
+        public virtual ICollection<Connection> ConnectionCaretakers { get; set; }
+        public virtual ICollection<Connection> ConnectionPatients { get; set; }
+        public virtual ICollection<ConnectionRequest> ConnectionRequestCaretakers { get; set; }
+        public virtual ICollection<ConnectionRequest> ConnectionRequestPatients { get; set; }
+        public virtual ICollection<ConnectionRequest> ConnectionRequestRequesters { get; set; }
+        public virtual ICollection<Log> Logs { get; set; }
+        public virtual ICollection<Medication> Medications { get; set; }
     }
 }
